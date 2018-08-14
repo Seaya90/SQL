@@ -1,0 +1,2 @@
+select DBMS_XDB.GETHTTPPORT() from dual;
+exec DBMS_XDB.SETHTTPPORT(8090);
