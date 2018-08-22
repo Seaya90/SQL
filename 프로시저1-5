@@ -1,0 +1,27 @@
+create or replace PROCEDURE PRC_IF (
+    IN_NUM NUMBER
+) AS
+    V_STR VARCHAR2(1000) := ' >> ';
+BEGIN
+    --짝수, 홀수 판별
+    IF (MOD(IN_NUM, 2) = 0) THEN
+        V_STR := V_STR || '짝수';
+    ELSE
+        V_STR := V_STR || '홀수';
+    END IF;
+    
+    DBMS_OUTPUT.PUT_LINE(IN_NUM || V_STR ||' 입니다');
+    
+    --4으로 나눈 나머지 값 확인
+    IF (MOD(IN_NUM, 4) = 0) THEN
+        V_STR := V_STR || ', 4으로 나눈 나머지 0';
+    ELSIF (MOD(IN_NUM, 4) = 1) THEN
+        V_STR := V_STR || ', 4으로 나눈 나머지 1';
+    ELSIF (MOD(IN_NUM, 4) = 2) THEN
+        V_STR := V_STR || ', 4으로 나눈 나머지 2';
+    ELSE
+        V_STR := V_STR || ', 4으로 나눈 나머지 3';
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE(IN_NUM || V_STR);
+END;
