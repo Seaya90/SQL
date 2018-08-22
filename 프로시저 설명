@@ -1,0 +1,63 @@
+--PL/SQL 프로시저
+SET SERVEROUTPUT ON;
+
+DECLARE --변수선언
+    V_EMPID NUMBER;
+    V_NAME VARCHAR2(30);
+BEGIN --실행문 작성 시작
+    V_EMPID := 100; --치환문 부호 :=
+    V_NAME := '홍길동';
+    
+    DBMS_OUTPUT.PUT_LINE(V_EMPID ||':'||V_NAME);
+END;--실행문 작성 끝
+
+-----------------------
+DECLARE
+    V_BOOKID NUMBER(2);
+    V_BOOKNAME VARCHAR2(40);
+    V_PUBLISHER VARCHAR2(40);
+    V_PRICE NUMBER(8);
+BEGIN
+    --SELECT ~ INTO ~ FROM 형태로 사용
+    --SELECT INTO문의 실행결과는 데이타를 1건만 허용
+    SELECT BOOKID, BOOKNAME, PUBLISHER, PRICE
+      INTO V_BOOKID, V_BOOKNAME, V_PUBLISHER, V_PRICE 
+      FROM BOOK
+     WHERE BOOKID = 1;
+
+    DBMS_OUTPUT.PUT_LINE(V_BOOKID ||':'|| V_BOOKNAME 
+            ||':'|| V_PUBLISHER ||':'|| V_PRICE);
+END;
+
+-----------------------------
+--저장 프로시저(STORED PROCEDURE)
+--매개변수 유형
+----IN : 입력 받기만 하는 변수(기본값)
+----OUT : 출력만 하는 변수
+----IN OUT : 입력, 출력 할 수 있는 변수
+CREATE OR REPLACE PROCEDURE BOOK_DISP
+( --매개변수 선언부 : ()안에 작성
+    IN_BOOKID IN NUMBER
+)
+AS
+    --변수선언부
+    V_BOOKID NUMBER(2);
+    V_BOOKNAME VARCHAR2(40);
+    V_PUBLISHER VARCHAR2(40);
+    V_PRICE NUMBER(8);
+BEGIN --실행부 시작
+    SELECT BOOKID, BOOKNAME, PUBLISHER, PRICE
+      INTO V_BOOKID, V_BOOKNAME, V_PUBLISHER, V_PRICE 
+      FROM BOOK
+     WHERE BOOKID = IN_BOOKID;
+
+    DBMS_OUTPUT.PUT_LINE(V_BOOKID ||':'|| V_BOOKNAME 
+            ||':'|| V_PUBLISHER ||':'|| V_PRICE);
+END; --실행부 종료
+
+---------------------------------
+--프로시저 실행 : EXECUTE 키워드(명령문) 사용
+EXECUTE BOOK_DISP(4);
+
+--프로시저의 삭제
+DROP PROCEDURE BOOK_DISP2;
