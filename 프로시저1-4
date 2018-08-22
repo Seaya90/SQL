@@ -19,5 +19,8 @@ BEGIN
 END;
 
 -----------------
+
+
+***
 EXECUTE PRC_IF(778);
-EXEC PRC_IF(888);
+EXEC PRC_IF(888);    --EXECUTE줄임말 
