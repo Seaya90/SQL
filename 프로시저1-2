@@ -1,0 +1,39 @@
+--프로시저 OUT값 사용
+CREATE OR REPLACE PROCEDURE GET_BOOKINFO2 (
+    IN_BOOKID IN NUMBER,
+    OUT_BOOKNAME OUT VARCHAR,
+    OUT_PUBLISHER OUT VARCHAR,
+    OUT_PRICE OUT NUMBER
+) AS
+BEGIN
+    SELECT BOOKNAME, PUBLISHER, PRICE
+      INTO OUT_BOOKNAME, OUT_PUBLISHER, OUT_PRICE
+      FROM BOOK
+     WHERE BOOKID = IN_BOOKID;
+     
+    DBMS_OUTPUT.PUT_LINE(IN_BOOKID ||':'|| OUT_BOOKNAME 
+            ||':'|| OUT_PUBLISHER ||':'|| OUT_PRICE); 
+END;
+
+
+************************************************************************
+
+----프로시저를 생성 할 땐, 항상 범위를 드래그 해서 해야함
+----------------------------------
+--프로시저 OUT 매개변수값 확인
+create or replace PROCEDURE GET_BOOKINFO_TEST (
+    IN_BOOKID IN NUMBER
+) AS
+    V_BOOKNAME BOOK.BOOKNAME%TYPE;
+    V_PUBLISHER book.publisher%TYPE;
+    V_PRICE BOOK.PRICE%TYPE;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('입력받은 값(ID): '|| IN_BOOKID);
+
+    --GET_BOOKINFO 프로시저 실행(호출)
+    GET_BOOKINFO(IN_BOOKID, V_BOOKNAME, V_PUBLISHER, V_PRICE); 
+
+    --받은 값(OUT) 화면 출력
+    DBMS_OUTPUT.PUT_LINE('>>BOOKINFO_TEST결과: '||IN_BOOKID ||':'||
+           V_BOOKNAME ||':'|| V_PUBLISHER ||':'|| V_PRICE);
+END;
