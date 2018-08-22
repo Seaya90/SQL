@@ -1,0 +1,46 @@
+--===========================================
+--반복문 : FOR, WHILE
+--FOR문
+--숫자를 하나 입력받아서 합계출력(1~N까지의 합)
+CREATE OR REPLACE PROCEDURE PRC_FOR_SUM (
+    IN_NUM NUMBER
+) AS
+    V_SUM NUMBER := 0; --변수 초기값 설정
+    I NUMBER := 0;
+BEGIN
+    --입력받은 숫자까지의 합계 구하기(1~IN_NUM까지)
+    DBMS_OUTPUT.PUT('1 부터 '|| IN_NUM ||'까지의 합: ');
+    
+    --FOR문으로 반복처리
+    --FOR 변수 IN 초기값..최종값 LOOP ~ END LOOP;
+    FOR I IN 1..IN_NUM LOOP
+        V_SUM := V_SUM + I;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE(V_SUM);
+END;
+
+
+
+
+--=====================================  END까지니까 알아서 구분하기 
+
+
+--WHILE 문
+CREATE OR REPLACE PROCEDURE PRC_WHILE_SUM (
+    IN_NUM NUMBER
+) AS
+    V_SUM NUMBER := 0; --변수 초기값 설정
+    I NUMBER := 0;
+BEGIN
+    --입력받은 숫자까지의 합계 구하기(1~IN_NUM까지)
+    DBMS_OUTPUT.PUT('1 부터 '|| IN_NUM ||'까지의 합: ');
+    
+    --WHILE 문
+    WHILE (I <= IN_NUM)  LOOP
+        V_SUM := V_SUM + I;
+        I := I + 1;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE(V_SUM);
+END;
