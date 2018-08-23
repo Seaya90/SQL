@@ -1,0 +1,182 @@
+--BOOK테이블에 대한 로그(LOG 이력)를 남길 테이블(BOOK_LOG) 작성
+CREATE TABLE BOOK_LOG (
+    BOOKID NUMBER,
+    BOOKNAME VARCHAR2(100),
+    PUBLISHER VARCHAR2(100),
+    PRICE VARCHAR2(100),
+    LOGDATE DATE DEFAULT SYSDATE,
+    JOB_GUBUN VARCHAR2(100)
+);
+
+
+-------------------------------------------------------테이블 생성
+
+
+--트리거 작성
+--BOOK 테이블에 데이타가 입력(INSERT)되면 BOOK_LOG에 이력 남김
+--트리거명 : AFTER_INSERT_BOOK
+CREATE OR REPLACE TRIGGER AFTER_INSERT_BOOK
+    AFTER INSERT ON BOOK
+    FOR EACH ROW
+DECLARE
+    
+BEGIN 
+
+-----------------------------------------------------------
+
+BEGIN
+    --로그 입력
+    INSERT INTO BOOK_LOG
+           (BOOKID, BOOKNAME, PUBLISHER, PRICE
+         , JOB_GUBUN)
+    VALUES (:NEW.BOOKID, :NEW.BOOKNAME, :NEW.PUBLISHER, :NEW.PRICE
+         , 'INSERT');            
+END;
+
+-------------------------------------------------------------
+SELECT * FROM BOOK ORDER BY BOOKID DESC;
+SELECT * FROM BOOK_LOG;
+--INSERT 트리거 동작시키기
+INSERT INTO BOOK 
+VALUES (90, '트리거란 무엇인가?', 'ITBOOK', 33000);
+
+INSERT INTO BOOK 
+VALUES (91, '트리거란 무엇인가?[개정판]', 'ITBOOK', 35000);
+
+-----------------------------------------------------------------------
+
+
+--============================================
+--UPDATE 트리거 작성 : AFTER_UPDATE_BOOK
+--BOOK 테이블 수정(UPDATE) 발생시 이력남기기
+CREATE OR REPLACE TRIGGER AFTER_UPDATE_BOOK
+    AFTER UPDATE ON BOOK
+    FOR EACH ROW --수정되는 모든 데이타에 대하여 트리거 동작
+DECLARE
+
+BEGIN
+    --로그 입력
+    INSERT INTO BOOK_LOG
+           (BOOKID, BOOKNAME, PUBLISHER, PRICE
+         , JOB_GUBUN)
+    VALUES (:OLD.BOOKID
+         , :OLD.BOOKNAME ||' > '|| :NEW.BOOKNAME
+         , :OLD.PUBLISHER ||' > '|| :NEW.PUBLISHER
+         , :OLD.PRICE ||' > '|| :NEW.PRICE
+         , 'UPDATE'); 
+END;
+----------------------------
+----------------------------
+--UPDATE 트리거 테스트 : BOOK테이블 데이타 수정
+--91, '트리거란 무엇인가?[개정판]', 'ITBOOK', 35000
+-->>'트리거란 무엇인가?[특별개정판]', 40000
+
+UPDATE BOOK
+   SET BOOKNAME = '트리거 무엇인가?[특별개정]'
+     , PRICE = 50000
+ WHERE BOOKID = 91;
+
+SELECT * FROM BOOK ORDER BY BOOKID DESC;
+SELECT * FROM BOOK_LOG;
+
+--================================
+
+--(실습)DELETE 트리거 작성하고 테스트 확인
+--트리거명 : AFTER_DELETE_BOOK
+--동작은 삭제작업후 BOOK_LOG에 이력남기기 : 삭제전 데이타를 기록
+-------------
+create or replace TRIGGER AFTER_DELETE_BOOK
+    AFTER DELETE ON BOOK
+    FOR EACH ROW
+DECLARE
+    
+BEGIN
+    --로그 입력
+    INSERT INTO BOOK_LOG
+           (BOOKID, BOOKNAME, PUBLISHER, PRICE
+         , JOB_GUBUN)
+    VALUES (:OLD.BOOKID, :OLD.BOOKNAME, :OLD.PUBLISHER, :OLD.PRICE
+         , 'DELETE');            
+END;
+
+-----------------------------------------------------
+
+--DELETE 트리거 테스트
+DELETE FROM BOOK WHERE BOOKID = 91;
+
+SELECT * FROM BOOK ORDER BY BOOKID DESC;
+SELECT * FROM BOOK_LOG;
+
+--=======================================
+--INSERT, UPDATE, DELETE 이벤트가 발생할 때 동작할 트리거
+--한번에 작성처리
+create or replace TRIGGER TRIGGER_IUD 
+AFTER INSERT OR UPDATE OR DELETE ON BOOK 
+FOR EACH ROW
+BEGIN
+  CASE WHEN INSERTING THEN
+            --로그 입력
+            INSERT INTO BOOK_LOG
+                   (BOOKID, BOOKNAME, PUBLISHER, PRICE
+                 , JOB_GUBUN)
+            VALUES (:NEW.BOOKID, :NEW.BOOKNAME, :NEW.PUBLISHER, :NEW.PRICE
+                 , 'INSERT');   
+       WHEN UPDATING THEN
+            --로그 입력
+            INSERT INTO BOOK_LOG
+                   (BOOKID, BOOKNAME, PUBLISHER, PRICE
+                 , JOB_GUBUN)
+            VALUES (:OLD.BOOKID
+                 , :OLD.BOOKNAME ||' > '|| :NEW.BOOKNAME
+                 , :OLD.PUBLISHER ||' > '|| :NEW.PUBLISHER
+                 , :OLD.PRICE ||' > '|| :NEW.PRICE
+                 , 'UPDATE'); 
+       WHEN DELETING THEN
+            --로그 입력
+            INSERT INTO BOOK_LOG
+                   (BOOKID, BOOKNAME, PUBLISHER, PRICE
+                 , JOB_GUBUN)
+            VALUES (:OLD.BOOKID, :OLD.BOOKNAME, :OLD.PUBLISHER, :OLD.PRICE
+                 , 'DELETE'); 
+  END CASE;
+END;
+
+
+
+create or replace TRIGGER TRIGGER_IUD2 
+AFTER DELETE OR INSERT OR UPDATE ON BOOK 
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+            --로그 입력
+            INSERT INTO BOOK_LOG
+                   (BOOKID, BOOKNAME, PUBLISHER, PRICE
+                 , JOB_GUBUN)
+            VALUES (:NEW.BOOKID, :NEW.BOOKNAME, :NEW.PUBLISHER, :NEW.PRICE
+                 , 'INSERT');   
+    END IF;
+    IF UPDATING THEN
+            --로그 입력
+            INSERT INTO BOOK_LOG
+                   (BOOKID, BOOKNAME, PUBLISHER, PRICE
+                 , JOB_GUBUN)
+            VALUES (:OLD.BOOKID
+                 , :OLD.BOOKNAME ||' > '|| :NEW.BOOKNAME
+                 , :OLD.PUBLISHER ||' > '|| :NEW.PUBLISHER
+                 , :OLD.PRICE ||' > '|| :NEW.PRICE
+                 , 'UPDATE'); 
+     END IF;
+     IF DELETING THEN
+            --로그 입력
+            INSERT INTO BOOK_LOG
+                   (BOOKID, BOOKNAME, PUBLISHER, PRICE
+                 , JOB_GUBUN)
+            VALUES (:OLD.BOOKID, :OLD.BOOKNAME, :OLD.PUBLISHER, :OLD.PRICE
+                 , 'DELETE'); 
+     END IF;
+END;
+
+
+
+
+
