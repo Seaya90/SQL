@@ -47,8 +47,33 @@ GRANT SELECT ON MADANG.BOOK TO MDGUEST;
 GRANT SELECT ON BOOK TO MDGUEST;
 
 REVOKE SELECT ON MADANG.BOOK FROM MDGUEST;
+-------
+--MADANG.CUSTOMER 테이블에 대하여 MDGUEST 유저에게
+----SELECT, UPDATE 권한 부여
+GRANT SELECT, UPDATE ON MADANG.CUSTOMER TO MDGUEST;
 
+--===============================
+--(MDGUEST에서 작업시)
+SELECT * FROM MADANG.CUSTOMER;
+UPDATE MADANG.CUSTOMER
+   SET PHONE = '010-1111-1111'
+ WHERE NAME = '박세리'
+;
+--SQL 오류: ORA-01031: insufficient privileges
+--삭제 권한 없음
+DELETE FROM MADANG.CUSTOMER WHERE NAME = '박세리';
 
+--ORA-00942: table or view does not exist
+SELECT * FROM MADANG.BOOK; --접근 권한 없어 사용못함
+---------------------------------------------
+--WITH GRANT OPTION : 다른 유저에게 권한 부여할 수 있도록 권한 부여
+GRANT SELECT, UPDATE ON MADANG.BOOK TO MDGUEST 
+WITH GRANT OPTION;
+--------------
+--권한 회수 REVOKE
+REVOKE SELECT, UPDATE ON MADANG.BOOK FROM MDGUEST;
+
+--=======================================
 
 
 
