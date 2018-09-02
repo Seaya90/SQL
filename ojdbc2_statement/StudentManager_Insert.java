@@ -8,37 +8,37 @@ import java.sql.Statement;
 public class StudentManager_Insert {
 
 	public static void main(String[] args) {
-		//JDBC¸¦ ÀÌ¿ëÇÑ DB ÇÁ·Î±×·¡¹Ö ¹æ¹ı
-		//0. JDBC ¶óÀÌºê·¯¸® °³¹ßÈ¯°æ ¼³Á¤(ºôµå°æ·Î¿¡ µî·Ï)
-		//1. JDBC µå¶óÀÌ¹ö ·Îµù
-		//2. DB¿¬°á  - Connection °´Ã¼ »ı¼º <-DriverManager
-		//3. Statement¹® ½ÇÇà(SQL¹® ½ÇÇà)
-		//4. SQL ½ÇÇà °á°ú¿¡ ´ëÇÑ Ã³¸®
-		//   -SELECT : Á¶È¸(°Ë»ö) µ¥ÀÌÅ¸ °á°ú °ª¿¡ ´ëÇÑ Ã³¸®
-		//   -INSERT, UPDATE, DELETE : int°ª(°Ç¼ö) Ã³¸®
-		//5. Å¬·ÎÂ¡ Ã³¸®¿¡ ÀÇÇÑ ÀÚ¿ø ¹İ³³
+		//JDBCë¥¼ ì´ìš©í•œ DB í”„ë¡œê·¸ë˜ë° ë°©ë²•
+		//0. JDBC ë¼ì´ë¸ŒëŸ¬ë¦¬ ê°œë°œí™˜ê²½ ì„¤ì •(ë¹Œë“œê²½ë¡œì— ë“±ë¡)
+		//1. JDBC ë“œë¼ì´ë²„ ë¡œë”©
+		//2. DBì—°ê²°  - Connection ê°ì²´ ìƒì„± <-DriverManager
+		//3. Statementë¬¸ ì‹¤í–‰(SQLë¬¸ ì‹¤í–‰)
+		//4. SQL ì‹¤í–‰ ê²°ê³¼ì— ëŒ€í•œ ì²˜ë¦¬
+		//   -SELECT : ì¡°íšŒ(ê²€ìƒ‰) ë°ì´íƒ€ ê²°ê³¼ ê°’ì— ëŒ€í•œ ì²˜ë¦¬
+		//   -INSERT, UPDATE, DELETE : intê°’(ê±´ìˆ˜) ì²˜ë¦¬
+		//5. í´ë¡œì§• ì²˜ë¦¬ì— ì˜í•œ ìì› ë°˜ë‚©
 		//////////////////////////////////////		
 
-		//0. JDBC ¶óÀÌºê·¯¸® °³¹ßÈ¯°æ ¼³Á¤(ºôµå°æ·Î¿¡ µî·Ï)
+		//0. JDBC ë¼ì´ë¸ŒëŸ¬ë¦¬ ê°œë°œí™˜ê²½ ì„¤ì •(ë¹Œë“œê²½ë¡œì— ë“±ë¡)
 		Connection conn = null;
 		Statement stmt = null;
 		
 		try {
-			//1. JDBC µå¶óÀÌ¹ö ·Îµù
+			//1. JDBC ë“œë¼ì´ë²„ ë¡œë”©
 			Class.forName("oracle.jdbc.OracleDriver");
 			
-			//2. DB¿¬°á  - Connection °´Ã¼ »ı¼º <-DriverManager
+			//2. DBì—°ê²°  - Connection ê°ì²´ ìƒì„± <-DriverManager
 			conn = DriverManager.getConnection(
 					"jdbc:oracle:thin:@127.0.0.1:1521:xe", 
 					"mystudy", "mystudypw");
 
-			//3-1. Connection °´Ã¼·Î ºÎÅÍ Statement °´Ã¼ »ı¼ºÇÏ°í,
+			//3-1. Connection ê°ì²´ë¡œ ë¶€í„° Statement ê°ì²´ ìƒì„±í•˜ê³ ,
 			stmt = conn.createStatement();
 			
-			//3-2. Statement¹® ½ÇÇà(SQL¹® ½ÇÇà)
+			//3-2. Statementë¬¸ ì‹¤í–‰(SQLë¬¸ ì‹¤í–‰)
 			String sql = "";
 			String id = "2018005";
-			String name = "È«°æ·¡";
+			String name = "í™ê²½ë˜";
 			int kor = 100;
 			int eng = 90;
 			int math = 80;
@@ -50,8 +50,8 @@ public class StudentManager_Insert {
 			
 			int cnt = stmt.executeUpdate(sql);
 			
-			//4. SQL ½ÇÇà °á°ú¿¡ ´ëÇÑ Ã³¸®
-			System.out.println(">> ÀÔ·Â°Ç¼ö: " + cnt);
+			//4. SQL ì‹¤í–‰ ê²°ê³¼ì— ëŒ€í•œ ì²˜ë¦¬
+			System.out.println(">> ì…ë ¥ê±´ìˆ˜: " + cnt);
 			
 			
 		} catch (ClassNotFoundException e) {
@@ -59,7 +59,7 @@ public class StudentManager_Insert {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			//5. Å¬·ÎÂ¡ Ã³¸®¿¡ ÀÇÇÑ ÀÚ¿ø ¹İ³³
+			//5. í´ë¡œì§• ì²˜ë¦¬ì— ì˜í•œ ìì› ë°˜ë‚©
 			try {
 				if (stmt != null) {
 					stmt.close();
