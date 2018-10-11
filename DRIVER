@@ -1,0 +1,39 @@
+try {
+		//1. 드라이버 로딩
+		Class.forName(DRIVER);
+		//2. DB연결(Connection)
+		conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		//3. Statement 객체 생성
+		stmt = conn.createStatement();
+		//4. SQL문 실행
+		rs = stmt.executeQuery(sql);
+		//5. SQL문 실행결과에 대한 처리
+		while (rs.next()) {
+    
+    
+    
+    <tr>
+				<td><%=rs.getInt("RN") %></td>
+				<td><%=rs.getInt("SABUN") %></td>
+				<td><%=rs.getString("NAME") %></td>
+				<td><%=rs.getDate("NALJA") %></td>
+				<td><%=rs.getInt("PAY") %></td>
+			</tr>
+<%		}
+		rs = stmt.executeQuery("SELECT COUNT(*) AS CNT FROM GUEST");
+		if (rs.next()) {
+			cnt = rs.getInt("CNT");
+		}
+	} catch (Exception e) {
+		out.println("<h2>[예외발생] 담당자에게(8282) 연락바랍니다</h2>");
+	} finally {
+		try {
+			if (rs != null) rs.close();
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		} catch (Exception e) {}
+	}
+  
+  
+  
+  ------퍼온 예시, 알아서 골라내기 
